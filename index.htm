@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoom Imports | Mazda Kenya</title>
+    <title>Zoom Imports | Mazda Specialization Kenya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -236,7 +236,7 @@ body.modal-open {
 
    <section id="inventory" class="max-w-7xl mx-auto px-6 py-24">
         <h2 class="text-3xl font-extrabold text-slate-900 uppercase mb-12">Available Units</h2>
-        <div id="inventory-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+        <div id="inventory-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
     </div>
     </section>
    
@@ -483,74 +483,77 @@ function renderInventory(data = vehicles) {
     `}).join('');
 }
 
-       function openModal(id) {
+      function openModal(id) {
     const car = vehicles.find(v => v.id === id);
     const content = document.getElementById('modal-content');
     const nav = document.getElementById('main-nav');
 
-    // 1. Completely hide the navigation pill when entering
+    // 1. Hide the navigation pill
     if (nav) {
         nav.classList.add('nav-hidden');
     }
 
-    // 2. Set the content with large images and responsive fonts
+    // 2. Single-scroll content layout
     content.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
-            <div class="relative h-[70vh] lg:h-screen bg-slate-100 lg:sticky lg:top-0">
+        <div class="relative flex flex-col min-h-screen bg-white">
+            
+            <button onclick="closeModal()" 
+                    class="fixed top-6 right-6 z- w-12 h-12 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-xl border border-white/20 text-white hover:bg-black/40 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="w-full h-[60vh] md:h-[85vh] bg-slate-100 overflow-hidden">
                 <div id="swiper" class="flex overflow-x-auto snap-x snap-mandatory h-full hide-scrollbar scroll-smooth">
                     ${car.images.map(img => `
                         <img src="${img}" class="w-full h-full object-cover flex-shrink-0 snap-center">
                     `).join('')}
                 </div>
-                
-                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10 px-4 py-2 bg-black/20 backdrop-blur-md rounded-full">
-                    ${car.images.map((_, i) => `
-                        <div class="w-1.5 h-1.5 rounded-full bg-white/60"></div>
-                    `).join('')}
-                </div>
             </div>
 
-            <div class="p-6 md:p-16 lg:p-24 flex flex-col justify-center bg-white min-h-[30vh]">
-                <div class="max-w-xl mx-auto w-full">
+            <div class="p-6 md:p-16 lg:p-24 bg-white">
+                <div class="max-w-4xl mx-auto w-full">
                     <span class="text-rose-600 font-black uppercase text-[10px] md:text-sm tracking-[0.3em] mb-4 block">Certified Mazda Import</span>
-                    <h2 class="text-4xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-none">${car.name}</h2>
+                    <h2 class="text-4xl md:text-8xl font-extrabold text-slate-900 mb-6 leading-none tracking-tighter">${car.name}</h2>
                     
-                    <div class="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
-                        <p class="text-2xl md:text-4xl font-black text-slate-900">KSh ${car.price.toLocaleString()}</p>
-                        <div class="h-6 w-px bg-slate-200"></div>
-                        <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px] md:text-sm">${car.trans}</span>
+                    <div class="flex items-center gap-4 md:gap-8 mb-10 md:mb-16">
+                        <p class="text-3xl md:text-5xl font-black text-slate-900">KSh ${car.price.toLocaleString()}</p>
+                        <div class="h-10 w-px bg-slate-200"></div>
+                        <span class="text-slate-500 font-bold uppercase tracking-widest text-xs md:text-lg">${car.trans}</span>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-3 md:gap-4 mb-8 md:mb-12">
-                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-12 md:mb-20">
+                        <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-100">
                             <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Engine</span>
-                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.engine}</p>
+                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.engine}</p>
                         </div>
-                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                        <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-100">
                             <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Drive Line</span>
-                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.drive}</p>
+                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.drive}</p>
                         </div>
-                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                        <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-100">
                             <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Year</span>
-                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.year}</p>
+                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.year}</p>
                         </div>
-                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                        <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-100">
                             <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Type</span>
-                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.type}</p>
+                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.type}</p>
                         </div>
                     </div>
 
-                    <p class="text-slate-500 text-sm md:text-xl leading-relaxed mb-8 md:mb-12 font-medium">
+                    <p class="text-slate-500 text-lg md:text-2xl leading-relaxed mb-12 md:mb-20 font-medium">
                         ${car.desc}
                     </p>
 
-                    <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <a href="https://wa.me/254715200194?text=I'm interested in the ${car.name}" 
-                           class="flex-1 bg-[#25D366] text-white py-4 md:py-6 rounded-2xl md:rounded-3xl font-black uppercase text-center text-xs md:text-base shadow-xl hover:scale-[1.02] transition-transform active:scale-95">
+                           class="flex- bg-[#25D366] text-white py-6 md:py-8 rounded-3xl font-black uppercase text-center text-sm md:text-lg shadow-2xl hover:scale-[1.01] transition-transform">
                             Start WhatsApp Inquiry
                         </a>
                         <button onclick="closeModal()" 
-                                class="flex-1 border-2 border-slate-100 text-slate-400 py-4 md:py-6 rounded-2xl md:rounded-3xl font-bold uppercase text-xs md:text-base hover:bg-slate-50 transition-colors">
+                                class="flex-1 border-2 border-slate-100 text-slate-400 py-6 md:py-8 rounded-3xl font-bold uppercase text-sm md:text-lg hover:bg-slate-50 transition-colors">
                             Close
                         </button>
                     </div>
@@ -559,7 +562,7 @@ function renderInventory(data = vehicles) {
         </div>
     `;
     
-    // 3. Show modal and completely lock background scroll
+    // 3. Open Modal and Lock Background
     document.getElementById('car-modal').classList.remove('hidden');
     document.body.classList.add('modal-open');
 }

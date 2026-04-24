@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoom Imports | Mazda Specialization Kenya</title>
+    <title>Zoom Imports | Mazda Kenya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -110,7 +110,26 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         }
         
-        body.modal-open { overflow: hidden; }
+        
+       /* Update these in your <style> tag */
+#car-modal {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100; /* Ensure it is above the nav */
+    background-color: white;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* This class is critical for disabling background scroll */
+body.modal-open {
+    overflow: hidden !important;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+}
 
    /* Base transition for the nav */
 #main-nav {
@@ -314,7 +333,7 @@
         type: "Hatchback", 
         engine: "1.8 Diesel", 
         drive: "FWD", 
-        trans: "Manual", 
+        trans: "Auto", 
         desc: "A masterpiece of modern engineering and design. The 2019 Mazda 3 Fastback features the revolutionary G-Vectoring Control Plus and a driver-centric cockpit designed to provide an unparalleled connection between the car and the driver.", 
         images: [
             "https://lh3.googleusercontent.com/u/0/d/1QUgJDGt5gr1L98qqy6gwtEc9sSobO1XB",
@@ -422,8 +441,8 @@ window.addEventListener("scroll", () => {
 
     lastScrollY = currentScrollY;
 });
-
-     function renderInventory(data = vehicles) {
+       
+function renderInventory(data = vehicles) {
     const grid = document.getElementById('inventory-grid');
     if (!grid) return;
 
@@ -432,12 +451,13 @@ window.addEventListener("scroll", () => {
         
         return `
         <div onclick="openModal(${car.id})" class="car-card bg-white border border-slate-100 rounded-3xl overflow-hidden cursor-pointer group relative">
-            <div class="h-64 relative overflow-hidden bg-slate-200"> 
+            <div class="h-80" relative overflow-hidden bg-slate-200"> 
                 <img src="${cardImage}" 
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                      onerror="this.style.display='none'">
-            </div>
-            <div class="p-6 pb-8"> 
+                </div>
+
+            <div class="p-6 pb-8 relative"> 
                 <h3 class="text-xl font-bold text-slate-900 mb-1">${car.name}</h3>
                 <p class="text-xl font-black text-rose-600 mb-4">KSh ${car.price.toLocaleString()}</p>
                 
@@ -468,73 +488,69 @@ window.addEventListener("scroll", () => {
     const content = document.getElementById('modal-content');
     const nav = document.getElementById('main-nav');
 
-    // 1. Hide the navigation pill immediately upon entry
+    // 1. Completely hide the navigation pill when entering
     if (nav) {
         nav.classList.add('nav-hidden');
     }
 
-    // 2. Set the modal content with the split-screen layout
+    // 2. Set the content with large images and responsive fonts
     content.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-            <div class="relative h-[60vh] lg:h-screen bg-slate-100 lg:sticky lg:top-0">
+        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-white">
+            <div class="relative h-[70vh] lg:h-screen bg-slate-100 lg:sticky lg:top-0">
                 <div id="swiper" class="flex overflow-x-auto snap-x snap-mandatory h-full hide-scrollbar scroll-smooth">
                     ${car.images.map(img => `
                         <img src="${img}" class="w-full h-full object-cover flex-shrink-0 snap-center">
                     `).join('')}
                 </div>
                 
-                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10 px-4 py-2 bg-black/20 backdrop-blur-md rounded-full">
                     ${car.images.map((_, i) => `
-                        <div class="w-2.5 h-2.5 rounded-full bg-white/40 border border-white/20 backdrop-blur-md"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white/60"></div>
                     `).join('')}
-                </div>
-
-                <div class="absolute bottom-10 right-10 hidden lg:block">
-                    <p class="text-black/50 text-[10px] font-bold uppercase tracking-[0.3em] rotate-90 origin-right">Scroll to explore</p>
                 </div>
             </div>
 
-            <div class="p-8 md:p-16 lg:p-24 flex flex-col justify-center bg-white">
+            <div class="p-6 md:p-16 lg:p-24 flex flex-col justify-center bg-white min-h-[30vh]">
                 <div class="max-w-xl mx-auto w-full">
-                    <span class="text-rose-600 font-black uppercase text-sm tracking-[0.3em] mb-4 block">Certified Mazda Import</span>
-                    <h2 class="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-none">${car.name}</h2>
+                    <span class="text-rose-600 font-black uppercase text-[10px] md:text-sm tracking-[0.3em] mb-4 block">Certified Mazda Import</span>
+                    <h2 class="text-4xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-none">${car.name}</h2>
                     
-                    <div class="flex items-center gap-6 mb-10">
-                        <p class="text-4xl font-black text-slate-900">KSh ${car.price.toLocaleString()}</p>
-                        <div class="h-8 w-px bg-slate-200"></div>
-                        <span class="text-slate-500 font-bold uppercase tracking-widest text-sm">${car.trans}</span>
+                    <div class="flex items-center gap-4 md:gap-6 mb-8 md:mb-10">
+                        <p class="text-2xl md:text-4xl font-black text-slate-900">KSh ${car.price.toLocaleString()}</p>
+                        <div class="h-6 w-px bg-slate-200"></div>
+                        <span class="text-slate-500 font-bold uppercase tracking-widest text-[10px] md:text-sm">${car.trans}</span>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 mb-12">
-                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                            <span class="text-slate-400 font-bold text-[10px] uppercase block mb-1">Engine Type</span>
-                            <p class="font-bold text-xl text-slate-900">${car.engine}</p>
+                    <div class="grid grid-cols-2 gap-3 md:gap-4 mb-8 md:mb-12">
+                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Engine</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.engine}</p>
                         </div>
-                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                            <span class="text-slate-400 font-bold text-[10px] uppercase block mb-1">Drive System</span>
-                            <p class="font-bold text-xl text-slate-900">${car.drive}</p>
+                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Drive Line</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.drive}</p>
                         </div>
-                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                            <span class="text-slate-400 font-bold text-[10px] uppercase block mb-1">Manufacture</span>
-                            <p class="font-bold text-xl text-slate-900">${car.year}</p>
+                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Year</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.year}</p>
                         </div>
-                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                            <span class="text-slate-400 font-bold text-[10px] uppercase block mb-1">Body Type</span>
-                            <p class="font-bold text-xl text-slate-900">${car.type}</p>
+                        <div class="bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100">
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Type</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.type}</p>
                         </div>
                     </div>
 
-                    <p class="text-slate-500 text-xl leading-relaxed mb-12 font-medium">
+                    <p class="text-slate-500 text-sm md:text-xl leading-relaxed mb-8 md:mb-12 font-medium">
                         ${car.desc}
                     </p>
 
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
                         <a href="https://wa.me/254715200194?text=I'm interested in the ${car.name}" 
-                           class="flex-1 bg-[#25D366] text-white py-6 rounded-3xl font-black uppercase text-center shadow-2xl shadow-green-200 hover:scale-[1.02] transition-transform active:scale-95">
-                             WhatsApp Inquiry
+                           class="flex-1 bg-[#25D366] text-white py-4 md:py-6 rounded-2xl md:rounded-3xl font-black uppercase text-center text-xs md:text-base shadow-xl hover:scale-[1.02] transition-transform active:scale-95">
+                            Start WhatsApp Inquiry
                         </a>
                         <button onclick="closeModal()" 
-                                class="flex-1 border-2 border-slate-100 text-slate-400 py-6 rounded-3xl font-bold uppercase hover:bg-slate-50 transition-colors">
+                                class="flex-1 border-2 border-slate-100 text-slate-400 py-4 md:py-6 rounded-2xl md:rounded-3xl font-bold uppercase text-xs md:text-base hover:bg-slate-50 transition-colors">
                             Close
                         </button>
                     </div>
@@ -543,16 +559,16 @@ window.addEventListener("scroll", () => {
         </div>
     `;
     
-    // 3. Show modal and disable background scroll
+    // 3. Show modal and completely lock background scroll
     document.getElementById('car-modal').classList.remove('hidden');
     document.body.classList.add('modal-open');
 }
 
-// Crucial: Update your closeModal function too!
+// Ensure you also have the updated closeModal function:
 function closeModal() {
     const nav = document.getElementById('main-nav');
     
-    // Bring the navbar back when the modal closes
+    // Bring the navbar back
     if (nav) {
         nav.classList.remove('nav-hidden');
     }

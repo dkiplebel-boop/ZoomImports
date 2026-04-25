@@ -486,39 +486,43 @@ function renderInventory(data = vehicles) {
     `}).join('');
 }
 
-    function openModal(id) {
+  function openModal(id) {
     const car = vehicles.find(v => v.id === id);
     const content = document.getElementById('modal-content');
     const nav = document.getElementById('main-nav');
 
-    // 1. Hide navigation
     if (nav) nav.classList.add('nav-hidden');
-
-    // 2. Create a history state so the Chrome back button works
-    // This prevents the back button from closing your whole website
     history.pushState({ modalOpen: true }, "");
 
-    // 3. Set content (Single scroll with Back Arrow top-left)
     content.innerHTML = `
-        <div class="relative flex flex-col min-h-screen bg-white">
+        <div class="relative flex flex-col lg:flex-row min-h-screen bg-white">
+            
             <button onclick="window.history.back()" 
-                    class="fixed top-6 left-6 z- w-12 h-12 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-xl border border-white/20 text-white hover:bg-black/40 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    class="fixed top-6 left-6 z- w-12 h-12 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-xl border border-white/30 text-white shadow-2xl transition-all active:scale-90">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
             </button>
 
-            <div class="w-full h-[60vh] md:h-[85vh] bg-slate-100 overflow-hidden">
+            <div class="relative w-full lg:w-1/2 h-[65vh] lg:h-screen lg:sticky lg:top-0 bg-slate-100 overflow-hidden">
                 <div id="swiper" class="flex overflow-x-auto snap-x snap-mandatory h-full hide-scrollbar scroll-smooth">
-                    ${car.images.map(img => `<img src="${img}" class="w-full h-full object-cover flex-shrink-0 snap-center">`).join('')}
+                    ${car.images.map(img => `
+                        <img src="${img}" class="w-full h-full object-cover flex-shrink-0 snap-center">
+                    `).join('')}
+                </div>
+
+                <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-50">
+                    ${car.images.map((_, i) => `
+                        <div class="w-2 h-2 rounded-full bg-white/60 border border-white/20 backdrop-blur-md shadow-sm"></div>
+                    `).join('')}
                 </div>
             </div>
 
-            <div class="p-6 md:p-16 lg:p-24 bg-white">
-                <div class="max-w-4xl mx-auto w-full">
-                    <span class="text-rose-600 font-black uppercase text-[10px] md:text-sm tracking-[0.3em] mb-4 block">Certified Mazda Import</span>
-                    <h2 class="text-4xl md:text-8xl font-extrabold text-slate-900 mb-6 tracking-tighter leading-none">${car.name}</h2>
+            <div class="w-full lg:w-1/2 p-6 md:p-16 lg:p-24 bg-white relative z-10 -mt-8 lg:mt-0 rounded-t-[2.5rem] lg:rounded-none shadow-[0_-20px_50px_rgba(0,0,0,0.15)] lg:shadow-none">
+                <div class="max-w-2xl mx-auto w-full">
+                    <span class="text-rose-600 font-black uppercase text-[10px] md:text-sm tracking-[0.4em] mb-4 block">Certified Mazda Import</span>
+                    <h2 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 mb-6 tracking-tighter leading-none">${car.name}</h2>
                     
                     <div class="flex items-center gap-4 md:gap-8 mb-10">
                         <p class="text-3xl md:text-5xl font-black text-slate-900">KSh ${car.price.toLocaleString()}</p>
@@ -526,35 +530,37 @@ function renderInventory(data = vehicles) {
                         <span class="text-slate-500 font-bold uppercase tracking-widest text-xs md:text-lg">${car.trans}</span>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
+                    <div class="grid grid-cols-2 gap-3 md:gap-4 mb-12">
                         <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
-                            <span class="text-slate-400 font-bold text-[8px] uppercase block mb-1">Engine</span>
-                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.engine}</p>
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Engine</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.engine}</p>
                         </div>
                         <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
-                            <span class="text-slate-400 font-bold text-[8px] uppercase block mb-1">Drive</span>
-                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.drive}</p>
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Drive Line</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.drive}</p>
                         </div>
                         <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
-                            <span class="text-slate-400 font-bold text-[8px] uppercase block mb-1">Year</span>
-                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.year}</p>
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Year</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.year}</p>
                         </div>
                         <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
-                            <span class="text-slate-400 font-bold text-[8px] uppercase block mb-1">Type</span>
-                            <p class="font-bold text-sm md:text-2xl text-slate-900">${car.type}</p>
+                            <span class="text-slate-400 font-bold text-[8px] md:text-[10px] uppercase block mb-1">Type</span>
+                            <p class="font-bold text-sm md:text-xl text-slate-900">${car.type}</p>
                         </div>
                     </div>
 
-                    <p class="text-slate-500 text-lg md:text-2xl leading-relaxed mb-12 font-medium">${car.desc}</p>
+                    <p class="text-slate-500 text-lg md:text-xl leading-relaxed mb-12 font-medium">
+                        ${car.desc}
+                    </p>
 
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-row gap-3 md:gap-4">
                         <a href="https://wa.me/254715200194?text=I'm interested in the ${car.name}" 
-                           class="flex- bg-[#25D366] text-white py-6 md:py-8 rounded-3xl font-black uppercase text-center shadow-xl">
-                            Start WhatsApp Inquiry
+                           class="flex-1 bg-[#25D366] text-white py-5 md:py-8 rounded-3xl font-black uppercase text-center text-[10px] md:text-sm shadow-xl transition-all active:scale-95 flex items-center justify-center">
+                            WhatsApp
                         </a>
                         <button onclick="window.history.back()" 
-                                class="flex-1 border-2 border-slate-100 text-slate-400 py-6 md:py-8 rounded-3xl font-bold uppercase">
-                            Back to Inventory
+                                class="flex-1 border-2 border-slate-100 text-slate-400 py-5 md:py-8 rounded-3xl font-bold uppercase text-[10px] md:text-sm hover:bg-slate-50 transition-colors">
+                            Back
                         </button>
                     </div>
                 </div>
